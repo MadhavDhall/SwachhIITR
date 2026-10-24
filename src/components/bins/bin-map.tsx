@@ -68,7 +68,7 @@ export default function BinMap({ bins, selectedBin, onSelectBin }: BinMapProps) 
     <div className="w-full h-full min-h-[480px] rounded-xl overflow-hidden relative border border-white/10 z-0">
       <MapContainer
         center={[centerLat, centerLng]}
-        zoom={12}
+        zoom={16}
         scrollWheelZoom={true}
         className="w-full h-full"
       >
