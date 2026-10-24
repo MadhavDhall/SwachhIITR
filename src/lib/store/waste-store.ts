@@ -11,7 +11,14 @@ import type {
   ThresholdConfig,
   DashboardStats,
 } from "@/types";
-import { DEFAULT_THRESHOLDS } from "@/data/seed";
+import {
+  DEFAULT_THRESHOLDS,
+  DEMO_ALERTS,
+  DEMO_BINS,
+  DEMO_ROUTES,
+  DEMO_VEHICLES,
+  DEMO_WASTE_SCANS,
+} from "@/data/seed";
 
 interface SwachhIITRState {
   bins: Bin[];
@@ -77,21 +84,26 @@ export const useWasteStore = create<SwachhIITRState>((set, get) => ({
       })
     );
     const [bins, scans, routes, alerts] = payloads;
-    const nextBins = bins.bins ?? [];
-    const nextAlerts = alerts.alerts ?? [];
+    // Keep the operations UI useful when the hosted API is unavailable.
+    // Successful API responses still take priority over local demo records.
+    const nextBins = bins.bins?.length ? bins.bins : DEMO_BINS;
+    const nextScans = scans.scans?.length ? scans.scans : DEMO_WASTE_SCANS;
+    const nextRoutes = routes.routes?.length ? routes.routes : DEMO_ROUTES;
+    const nextAlerts = alerts.alerts?.length ? alerts.alerts : DEMO_ALERTS;
     set({
       bins: nextBins,
-      scans: scans.scans ?? [],
-      routes: routes.routes ?? [],
+      scans: nextScans,
+      routes: nextRoutes,
       alerts: nextAlerts,
+      vehicles: DEMO_VEHICLES,
       stats: {
         totalBins: nextBins.length,
         activeBins: nextBins.filter((bin: Bin) => bin.status === "active").length,
         urgentBins: nextBins.filter((bin: Bin) => (bin.currentFillPct ?? 0) >= 85).length,
-        totalScans: scans.total ?? 0,
+        totalScans: scans.total ?? nextScans.length,
         totalCollections: 0,
-        activeVehicles: 0,
-        totalVehicles: 0,
+        activeVehicles: DEMO_VEHICLES.filter((vehicle) => vehicle.status !== "offline").length,
+        totalVehicles: DEMO_VEHICLES.length,
         activeAlerts: nextAlerts.filter((alert: Alert) => !alert.acknowledged).length,
         avgFillLevel: nextBins.length
           ? nextBins.reduce((sum: number, bin: Bin) => sum + (bin.currentFillPct ?? 0), 0) /
