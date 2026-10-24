@@ -1,5 +1,5 @@
 /* ────────────────────────────────────────────────────────────
- * WasteOS — Core Domain Types
+ * SwachhIITR — Core Domain Types
  * ──────────────────────────────────────────────────────────── */
 
 // ── Roles & Auth ───────────────────────────────────────────
@@ -68,7 +68,7 @@ export interface SensorStatus {
   minutesSinceLastReading: number | null;
 }
 
-// ── Waste Scans (WasteDNA) ─────────────────────────────────
+// ── Waste image scans ─────────────────────────────────────
 export interface BoundingBox {
   x: number;
   y: number;

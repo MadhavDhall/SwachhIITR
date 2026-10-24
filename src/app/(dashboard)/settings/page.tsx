@@ -72,7 +72,7 @@ export default function SettingsPage() {
                 onChange={(e) => setFormState({ ...formState, warningFillPct: Number(e.target.value) })}
                 className="w-full h-10 px-3 rounded-lg bg-slate-950/70 border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-emerald-500/50"
               />
-              <span className="text-[10px] text-slate-500 block">Triggers amber warning in BinSync matrix</span>
+              <span className="text-[10px] text-slate-500 block">Highlights bins needing campus collection</span>
             </div>
 
             <div className="space-y-1.5">
@@ -107,7 +107,7 @@ export default function SettingsPage() {
 
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-300">
-                WasteDNA Minimum Confidence Cutoff
+                Waste Image Review Confidence Cutoff
               </label>
               <input
                 type="number"
@@ -157,7 +157,7 @@ export default function SettingsPage() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">URL: {process.env.NEXT_PUBLIC_FASTAPI_URL || "Not configured"}</p>
-              <p className="text-[11px] text-slate-500">Engines: Ultralytics YOLOv8 + Google OR-Tools VRP</p>
+              <p className="text-[11px] text-slate-500">Campus image review and collection planning tools</p>
             </div>
 
             {/* Cloudinary Storage */}
