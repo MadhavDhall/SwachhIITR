@@ -6,17 +6,25 @@ export async function GET(request: Request) {
   const status = searchParams.get("status");
 
   const result = await query(
-    `SELECT ws.*, COALESCE(json_agg(
+    `SELECT ws.*,
+     (SELECT COALESCE(json_agg(
        json_build_object(
          'class', d.class_name, 'confidence', d.confidence,
          'boundingBox', json_build_object('x', d.box_x, 'y', d.box_y,
            'width', d.box_width, 'height', d.box_height)
        ) ORDER BY d.id
-     ) FILTER (WHERE d.id IS NOT NULL), '[]') AS detections
+     ), '[]'::json)
+      FROM detections d WHERE d.scan_id = ws.id) AS detections,
+     (SELECT COALESCE(json_object_agg(lower(class_name), count), '{}'::json)
+      FROM (
+        SELECT class_name, COUNT(*)::int AS count
+        FROM detections
+        WHERE scan_id = ws.id
+        GROUP BY class_name
+      ) class_counts) AS class_counts
      FROM waste_scans ws
-     LEFT JOIN detections d ON d.scan_id = ws.id
      ${status && status !== "all" ? "WHERE ws.verification_status = $1" : ""}
-     GROUP BY ws.id ORDER BY ws.created_at DESC LIMIT 500`,
+     ORDER BY ws.created_at DESC LIMIT 500`,
     status && status !== "all" ? [status] : []
   );
   const scans = result.rows.map((s) => ({
@@ -24,7 +32,7 @@ export async function GET(request: Request) {
     imageUrl: s.image_url,
     thumbnailUrl: s.thumbnail_url,
     detections: s.detections,
-    classCounts: {},
+    classCounts: s.class_counts ?? {},
     totalObjects: s.total_objects,
     averageConfidence: Number(s.average_confidence),
     hasUncertainResults: s.has_uncertain_results,

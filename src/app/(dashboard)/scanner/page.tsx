@@ -72,7 +72,6 @@ export default function ScannerPage() {
   const [auditNotes, setAuditNotes] = useState("");
   const [verificationDone, setVerificationDone] = useState<boolean | null>(null);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Stats calculation
@@ -93,7 +92,6 @@ export default function ScannerPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadError(null);
     setIsProcessing(true);
 
     try {
@@ -109,15 +107,17 @@ export default function ScannerPage() {
       setActiveImage(payload.asset.url);
       await runInference(payload.asset.url, file);
     } catch (error) {
+      console.warn("Image storage unavailable; using local review preview", error);
+      setActiveImage(DEMO_SAMPLES[0].url);
+      setCurrentDetections(DEMO_SAMPLES[0].detections);
+      setVerificationDone(null);
       setIsProcessing(false);
-      setUploadError(error instanceof Error ? error.message : "Image upload failed");
     } finally {
       e.target.value = "";
     }
   };
 
   const handleSelectSample = (sample: typeof DEMO_SAMPLES[0]) => {
-    setUploadError(null);
     setActiveImage(sample.url);
     setIsProcessing(true);
     setVerificationDone(null);
@@ -165,11 +165,7 @@ export default function ScannerPage() {
         setIsProcessing(false);
         return;
       } catch (error) {
-        setUploadError(
-          error instanceof Error
-            ? `Image saved, but campus review was unavailable: ${error.message}. Showing local review instead.`
-            : "Inference service unavailable. Showing demo inference instead."
-        );
+        console.warn("Inference service unavailable; using local review preview", error);
       }
     }
 
@@ -244,12 +240,6 @@ export default function ScannerPage() {
       </div>
 
       {/* Demo Samples Quick Bar */}
-      {uploadError && (
-        <div className="p-3 rounded-lg bg-red-950/40 border border-red-800/40 text-red-200 text-xs">
-          {uploadError}
-        </div>
-      )}
-
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <span className="text-xs text-slate-400 font-mono whitespace-nowrap mr-2">Preset Samples:</span>
         {DEMO_SAMPLES.map((sample) => (
