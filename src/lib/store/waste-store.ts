@@ -62,18 +62,21 @@ export const useWasteStore = create<WasteOSState>((set, get) => ({
   isSimulatingSensors: false,
 
   hydrate: async () => {
-    const responses = await Promise.all([
+    const results = await Promise.allSettled([
       fetch("/api/bins"),
       fetch("/api/scans"),
       fetch("/api/routes"),
       fetch("/api/alerts"),
     ]);
-    if (responses.some((response) => !response.ok)) {
-      throw new Error("Failed to load operational data");
-    }
-    const [bins, scans, routes, alerts] = await Promise.all(
-      responses.map((response) => response.json())
+    const payloads = await Promise.all(
+      results.map(async (result) => {
+        if (result.status === "rejected" || !result.value.ok) {
+          return {};
+        }
+        return result.value.json();
+      })
     );
+    const [bins, scans, routes, alerts] = payloads;
     const nextBins = bins.bins ?? [];
     const nextAlerts = alerts.alerts ?? [];
     set({

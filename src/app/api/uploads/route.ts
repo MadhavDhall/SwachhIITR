@@ -43,9 +43,15 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Cloudinary upload failed", error);
+    const message =
+      error instanceof Error && error.message.includes("Cloudinary is not configured")
+        ? "Image storage is not configured. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to the Render web service."
+        : error instanceof Error
+          ? error.message
+          : "Image upload failed";
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Image upload failed" },
-      { status: 502 }
+      { error: message },
+      { status: message.startsWith("Image storage is not configured") ? 503 : 502 }
     );
   }
 }
