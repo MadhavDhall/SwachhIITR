@@ -5,6 +5,7 @@ and automated material classification.
 """
 
 import logging
+import os
 from typing import List, Dict, Any
 from PIL import Image
 
@@ -64,8 +65,9 @@ SUPPORTED_CLASSES = {
 }
 
 class WasteDetector:
-    def __init__(self, model_path: str = "models/yolov8n_waste.pt"):
+    def __init__(self, model_path: str | None = None):
         self.model = None
+        model_path = model_path or os.getenv("YOLO_MODEL_PATH", "models/yolov8n_waste.pt")
         if ULTRALYTICS_AVAILABLE:
             try:
                 self.model = YOLO(model_path)
@@ -75,6 +77,10 @@ class WasteDetector:
 
     def get_classes(self) -> Dict[str, Any]:
         return SUPPORTED_CLASSES
+
+    @property
+    def is_ready(self) -> bool:
+        return self.model is not None
 
     def predict(self, image: Image.Image) -> Dict[str, Any]:
         """

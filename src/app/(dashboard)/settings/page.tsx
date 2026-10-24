@@ -42,7 +42,7 @@ export default function SettingsPage() {
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">
-            Configure telemetry alert thresholds, AWS IoT Core brokers, DynamoDB adapters, and vision pipelines.
+            Configure telemetry alert thresholds, Render PostgreSQL, Cloudinary storage, and vision pipelines.
           </p>
         </div>
 
@@ -134,19 +134,19 @@ export default function SettingsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-            {/* AWS IoT Core */}
+            {/* MQTT / IoT */}
             <div className="p-3.5 rounded-lg bg-slate-950/60 border border-white/5 space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-white flex items-center gap-1.5">
                   <Broadcast size={15} className="text-emerald-400" />
-                  AWS IoT Core MQTT
+                  IoT MQTT (planned)
                 </span>
-                <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">
-                  CONNECTED
+                <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">
+                  NOT CONFIGURED
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">Endpoint: iot.eu-west-1.amazonaws.com</p>
-              <p className="text-[11px] text-slate-500">Topic: wasteos/sensors/+/data</p>
+              <p className="text-[11px] text-slate-400">Use HiveMQ Cloud, EMQX, or AWS IoT Core later</p>
+              <p className="text-[11px] text-slate-500">Current sensor data: local simulation only</p>
             </div>
 
             {/* Amazon DynamoDB */}
@@ -154,14 +154,14 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-white flex items-center gap-1.5">
                   <Database size={15} className="text-amber-400" />
-                  Amazon DynamoDB
+                  Render PostgreSQL
                 </span>
-                <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">
-                  ADAPTER READY
+                <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">
+                  CONFIGURE ENV
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">Tables: wasteos_bins, wasteos_readings</p>
-              <p className="text-[11px] text-slate-500">Partition Key: bin_id (PK), timestamp (SK)</p>
+              <p className="text-[11px] text-slate-400">Bins, readings, scans, routes, alerts, and audit events</p>
+              <p className="text-[11px] text-slate-500">Connection checked through /api/health</p>
             </div>
 
             {/* Python FastAPI */}
@@ -175,23 +175,23 @@ export default function SettingsPage() {
                   LOCAL / SIMULATED
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">URL: http://127.0.0.1:8000</p>
-              <p className="text-[11px] text-slate-500">Engines: Ultralytics YOLOv8 + Google OR-Tools VRP</p>
+              <p className="text-[11px] text-slate-400">URL: {process.env.NEXT_PUBLIC_FASTAPI_URL || "Not configured"}</p>
+              <p className="text-[11px] text-slate-500">Engines: Ultralytics YOLOv8 + Google OR-Tools VRP (fallback enabled)</p>
             </div>
 
-            {/* Amazon S3 Bucket */}
+            {/* Cloudinary Storage */}
             <div className="p-3.5 rounded-lg bg-slate-950/60 border border-white/5 space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-white flex items-center gap-1.5">
                   <CloudArrowUp size={15} className="text-indigo-400" />
-                  Amazon S3 Storage
+                  Cloudinary Storage
                 </span>
-                <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">
-                  CONFIGURED
+                <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">
+                  CONFIGURE ENV
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">Bucket: s3://wasteos-scans-production</p>
-              <p className="text-[11px] text-slate-500">Presigned upload URLs with KMS SSE</p>
+              <p className="text-[11px] text-slate-400">Waste images and thumbnails</p>
+              <p className="text-[11px] text-slate-500">Uploads handled server-side via /api/uploads</p>
             </div>
           </div>
         </div>

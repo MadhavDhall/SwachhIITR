@@ -72,6 +72,7 @@ export default function ScannerPage() {
   const [auditNotes, setAuditNotes] = useState("");
   const [verificationDone, setVerificationDone] = useState<boolean | null>(null);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Stats calculation
@@ -88,17 +89,31 @@ export default function ScannerPage() {
   const hasUncertain = currentDetections.some((d) => d.confidence < 0.7);
 
   // Handle custom file upload
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const url = event.target?.result as string;
-      setActiveImage(url);
-      runInference(url);
-    };
-    reader.readAsDataURL(file);
+    setUploadError(null);
+    setIsProcessing(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/uploads", { method: "POST", body: formData });
+      const payload = (await response.json()) as { asset?: { url: string }; error?: string };
+
+      if (!response.ok || !payload.asset?.url) {
+        throw new Error(payload.error || "Image upload failed");
+      }
+
+      setActiveImage(payload.asset.url);
+      await runInference(payload.asset.url, file);
+    } catch (error) {
+      setIsProcessing(false);
+      setUploadError(error instanceof Error ? error.message : "Image upload failed");
+    } finally {
+      e.target.value = "";
+    }
   };
 
   const handleSelectSample = (sample: typeof DEMO_SAMPLES[0]) => {
@@ -113,11 +128,50 @@ export default function ScannerPage() {
     }, 600);
   };
 
-  const runInference = (imgUrl: string) => {
+  const runInference = async (imgUrl: string, file?: File) => {
     setIsProcessing(true);
     setVerificationDone(null);
 
-    // Simulate AI YOLOv8 inference call
+    const apiUrl = process.env.NEXT_PUBLIC_FASTAPI_URL;
+    if (apiUrl && file) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await fetch(`${apiUrl.replace(/\/$/, "")}/api/v1/inference/detect`, {
+          method: "POST",
+          body: formData,
+        });
+        const result = (await response.json()) as {
+          detections?: Array<{
+            class: string;
+            confidence: number;
+            boundingBox: Detection["boundingBox"];
+          }>;
+          detail?: string;
+        };
+
+        if (!response.ok || !result.detections) {
+          throw new Error(result.detail || "Inference service failed");
+        }
+
+        setCurrentDetections(
+          result.detections.map((detection) => ({
+            class: detection.class,
+            confidence: detection.confidence,
+            boundingBox: detection.boundingBox,
+          }))
+        );
+        setIsProcessing(false);
+        return;
+      } catch (error) {
+        setUploadError(
+          error instanceof Error
+            ? `${error.message}. Showing demo inference instead.`
+            : "Inference service unavailable. Showing demo inference instead."
+        );
+      }
+    }
+
     setTimeout(() => {
       const simulated: Detection[] = [
         { class: "plastic", confidence: 0.92, boundingBox: { x: 20, y: 25, width: 30, height: 35 } },
@@ -189,6 +243,12 @@ export default function ScannerPage() {
       </div>
 
       {/* Demo Samples Quick Bar */}
+      {uploadError && (
+        <div className="p-3 rounded-lg bg-red-950/40 border border-red-800/40 text-red-200 text-xs">
+          {uploadError}
+        </div>
+      )}
+
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <span className="text-xs text-slate-400 font-mono whitespace-nowrap mr-2">Preset Samples:</span>
         {DEMO_SAMPLES.map((sample) => (

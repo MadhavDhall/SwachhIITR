@@ -6,7 +6,7 @@ using Google OR-Tools with road distance estimation.
 
 import math
 import logging
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Optional, Tuple
 from pydantic import BaseModel
 
 logger = logging.getLogger("wasteos-optimizer")

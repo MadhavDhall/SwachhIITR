@@ -4,9 +4,9 @@ Provides endpoint for uploading waste images and receiving YOLOv8 bounding boxes
 class counts, confidence scores, and recycling recommendations.
 """
 
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import Any, List, Dict
 import io
 from PIL import Image
 
@@ -39,7 +39,7 @@ async def detect_waste(file: UploadFile = File(...)):
     """
     Accepts an uploaded image, runs YOLO inference, and returns localized waste objects.
     """
-    if not file.content_type.startswith("image/"):
+    if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Uploaded file must be an image.")
 
     contents = await file.read()

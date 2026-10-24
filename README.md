@@ -103,6 +103,61 @@ cd simulator
 python sensor_sim.py --dry-run
 ```
 
+### 4. Render + Cloudinary production setup
+
+The production deployment uses Render for the Next.js service and PostgreSQL,
+and Cloudinary for waste image storage. Copy `.env.example` to `.env.local`
+for local development, then set the same variables as secret environment
+variables in Render. Never commit the real values.
+
+```bash
+npm run db:migrate
+```
+
+The migration creates the relational schema for bins, sensor readings, scans,
+detections, vehicles, routes, collections, alerts, and audit events. Images
+are uploaded through `POST /api/uploads`; Cloudinary credentials stay on the
+server and are never exposed to the browser.
+
+`GET /api/health` reports database and Cloudinary readiness for Render health
+checks. The included `render.yaml` provisions a Render PostgreSQL database and
+configures the web service.
+
+The optional FastAPI service is also defined in `render.yaml`. Set
+`NEXT_PUBLIC_FASTAPI_URL` to its public Render URL to enable real inference
+requests from the scanner. The service uses a custom
+`models/yolov8n_waste.pt` file when present; without that file it explicitly
+reports `mock_fallback` and uses deterministic demo detections. OR-Tools is
+used when installed, with a heuristic fallback if it is unavailable.
+
+For real WasteDNA predictions, place the trained weights at
+`services/api/models/yolov8n_waste.pt` before deploying, or change
+`YOLO_MODEL_PATH` to a mounted model path in Render. The model file is ignored
+by Git because trained weights are usually too large for the repository.
+
+### MQTT telemetry
+
+The FastAPI service subscribes to `MQTT_TOPIC` when `MQTT_BROKER` is set and
+persists each JSON message into `sensor_readings`, updating the related bin.
+HiveMQ Cloud and EMQX Cloud work with username/password credentials. AWS IoT
+Core works with `MQTT_TLS=true` and certificate values; certificate values may
+be supplied as PEM contents in the environment variables and are materialized
+only in the service's temporary filesystem.
+
+Expected sensor payload:
+
+```json
+{
+  "bin_id": "bin_001",
+  "bin_label": "MRN-A01",
+  "fill_pct": 87.2,
+  "distance_cm": 24.7,
+  "battery_pct": 92,
+  "rssi_dbm": -64,
+  "timestamp": "2026-10-24T08:00:00Z"
+}
+```
+
 ---
 
 ## 📚 Technical Documentation
