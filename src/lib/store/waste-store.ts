@@ -13,7 +13,7 @@ import type {
 } from "@/types";
 import { DEFAULT_THRESHOLDS } from "@/data/seed";
 
-interface WasteOSState {
+interface SwachhIITRState {
   bins: Bin[];
   scans: WasteScan[];
   routes: Route[];
@@ -39,7 +39,7 @@ interface WasteOSState {
   simulateSinglePing: (binId?: string) => void;
 }
 
-export const useWasteStore = create<WasteOSState>((set, get) => ({
+export const useWasteStore = create<SwachhIITRState>((set, get) => ({
   bins: [],
   scans: [],
   routes: [],
@@ -209,99 +209,18 @@ export const useWasteStore = create<WasteOSState>((set, get) => ({
     }),
 
   optimizeRoutes: async (params) => {
-    // Simulate real OR-Tools VRP / TSP optimization calculation
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    set((state) => {
-      // Pick bins above 70% fill for collection
-      const urgentBins = state.bins.filter(
-        (b) => (b.currentFillPct ?? 0) >= (params?.maxThreshold ?? 70)
-      );
-
-      const updatedRoutes: Route[] = [
-        {
-          id: `rt_${Date.now()}_1`,
-          name: "Priority Cluster A - South Mumbai",
-          vehicleId: "veh_001",
-          vehicleName: "E-Compactor Alpha (MH-01-EA-1042)",
-          status: "planned",
-          totalDistanceKm: 14.8,
-          estimatedDurationMinutes: 42,
-          totalBins: Math.max(3, Math.ceil(urgentBins.length / 2)),
-          collectedBins: 0,
-          stops: [
-            {
-              binId: "bin_001",
-              binLabel: "MRN-A01",
-              location: { lat: 19.076, lng: 72.8777 },
-              order: 1,
-              status: "pending",
-              estimatedArrival: new Date(Date.now() + 15 * 60000).toISOString(),
-              fillPctAtDispatch: 87,
-            },
-            {
-              binId: "bin_010",
-              binLabel: "CLB-J10",
-              location: { lat: 18.9067, lng: 72.8147 },
-              order: 2,
-              status: "pending",
-              estimatedArrival: new Date(Date.now() + 30 * 60000).toISOString(),
-              fillPctAtDispatch: 95,
-            },
-            {
-              binId: "bin_005",
-              binLabel: "CST-E05",
-              location: { lat: 18.94, lng: 72.8353 },
-              order: 3,
-              status: "pending",
-              estimatedArrival: new Date(Date.now() + 45 * 60000).toISOString(),
-              fillPctAtDispatch: 71,
-            },
-          ],
-          createdAt: new Date().toISOString(),
-          startedAt: null,
-          completedAt: null,
-        },
-        {
-          id: `rt_${Date.now()}_2`,
-          name: "Priority Cluster B - Western Suburbs",
-          vehicleId: "veh_002",
-          vehicleName: "Heavy Compactor Beta (MH-02-TC-8891)",
-          status: "planned",
-          totalDistanceKm: 21.4,
-          estimatedDurationMinutes: 58,
-          totalBins: 2,
-          collectedBins: 0,
-          stops: [
-            {
-              binId: "bin_003",
-              binLabel: "ANR-C03",
-              location: { lat: 19.1197, lng: 72.8464 },
-              order: 1,
-              status: "pending",
-              estimatedArrival: new Date(Date.now() + 20 * 60000).toISOString(),
-              fillPctAtDispatch: 93,
-            },
-            {
-              binId: "bin_002",
-              binLabel: "BND-B02",
-              location: { lat: 19.0544, lng: 72.8403 },
-              order: 2,
-              status: "pending",
-              estimatedArrival: new Date(Date.now() + 40 * 60000).toISOString(),
-              fillPctAtDispatch: 45,
-            },
-          ],
-          createdAt: new Date().toISOString(),
-          startedAt: null,
-          completedAt: null,
-        },
-      ];
-
-      return {
-        routes: [...updatedRoutes, ...state.routes],
-      };
+    const response = await fetch("/api/routes/optimize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ min_fill_threshold: params?.maxThreshold ?? 70 }),
     });
+    if (!response.ok) {
+      throw new Error("Unable to plan a campus collection route");
+    }
+    const result = await response.json();
+    if (result.routes?.length) {
+      set((state) => ({ routes: [...result.routes, ...state.routes] }));
+    }
   },
 
   updateRouteStatus: (routeId, status) =>

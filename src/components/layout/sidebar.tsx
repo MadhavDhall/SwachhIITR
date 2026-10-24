@@ -23,8 +23,8 @@ import { useAuthStore } from "@/lib/auth/store";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Command Center", icon: HouseLine },
-  { href: "/scanner", label: "WasteDNA", icon: Camera },
-  { href: "/bins", label: "BinSync", icon: MapPin },
+  { href: "/scanner", label: "Waste Review", icon: Camera },
+  { href: "/bins", label: "Campus Bins", icon: MapPin },
   { href: "/routes", label: "Route Planner", icon: Path },
   { href: "/ledger", label: "Waste Ledger", icon: BookOpen },
   { href: "/analytics", label: "Analytics", icon: ChartBar },
@@ -85,7 +85,7 @@ export function Sidebar() {
           {!collapsed && (
             <div className="flex flex-col min-w-0">
               <span className="text-sm font-semibold text-white tracking-tight">
-                WasteOS
+                SwachhIITR
               </span>
               <span className="text-[10px] text-emerald-500/80 font-mono tracking-wide uppercase">
                 Operations

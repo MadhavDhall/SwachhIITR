@@ -60,9 +60,9 @@ interface BinMapProps {
 }
 
 export default function BinMap({ bins, selectedBin, onSelectBin }: BinMapProps) {
-  // Mumbai central default coordinates
-  const centerLat = selectedBin ? selectedBin.location.lat : 19.033;
-  const centerLng = selectedBin ? selectedBin.location.lng : 72.85;
+  // IIT Roorkee default coordinates
+  const centerLat = selectedBin ? selectedBin.location.lat : 29.8642;
+  const centerLng = selectedBin ? selectedBin.location.lng : 77.8963;
 
   return (
     <div className="w-full h-full min-h-[480px] rounded-xl overflow-hidden relative border border-white/10 z-0">

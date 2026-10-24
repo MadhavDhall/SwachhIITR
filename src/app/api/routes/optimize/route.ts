@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      solver: "Google OR-Tools CVRP (Server Optimized)",
+      planner: "Campus collection planner",
       routes: generatedRoutes,
       binsIncluded: candidateBins.length,
     });

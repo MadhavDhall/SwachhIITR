@@ -35,10 +35,10 @@ export function Header() {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>SIMULATION ENGINE LIVE</span>
+          <span>SWACHH IITR OPERATIONS</span>
         </div>
         <span className="hidden sm:inline-block text-xs text-slate-400 font-mono">
-          AWS IoT Core + YOLOv8 + OR-Tools VRP
+          IIT Roorkee campus cleanliness network
         </span>
       </div>
 
@@ -47,7 +47,7 @@ export function Header() {
         {/* Simulate Sensor Ping button */}
         <button
           onClick={handleSimulatePing}
-          title="Simulate an ESP32 ultrasonic sensor reading ping"
+          title="Record a campus bin reading"
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200",
             pingSuccess
@@ -56,7 +56,7 @@ export function Header() {
           )}
         >
           <Lightning size={14} weight="fill" className={pingSuccess ? "text-white" : "text-amber-400"} />
-          <span className="hidden md:inline">{pingSuccess ? "Ping Ingested!" : "Simulate IoT Ping"}</span>
+          <span className="hidden md:inline">{pingSuccess ? "Reading Saved!" : "Record Bin Reading"}</span>
         </button>
 
         {/* Quick Link to Scan */}
@@ -65,7 +65,7 @@ export function Header() {
           className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-all active:scale-95 shadow-sm shadow-emerald-900/20"
         >
           <Camera size={14} weight="bold" />
-          <span>WasteDNA Scan</span>
+          <span>Waste Image Review</span>
         </Link>
 
         {/* Alerts Button with Counter & Dropdown */}

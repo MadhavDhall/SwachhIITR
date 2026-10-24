@@ -10,7 +10,7 @@
   filter: brightness(0.7) invert(1) contrast(1.2) hue-rotate(180deg) saturate(0.3);
 }
 
-/* ── WasteOS Forest Theme ───────────────────────────────── */
+/* ── SwachhIITR Campus Green Theme ──────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -22,7 +22,7 @@ import { WASTE_CATEGORIES } from "@/data/seed";
 import type { Detection, WasteScan } from "@/types";
 import { cn } from "@/lib/utils";
 
-// Preset demo images to test WasteDNA quickly
+// Preset images for local review testing
 const DEMO_SAMPLES = [
   {
     id: "sample-1",
@@ -195,7 +195,7 @@ export default function ScannerPage() {
       verificationStatus: approved ? "verified" : "rejected",
       verifiedBy: "Operations Supervisor",
       verifiedAt: new Date().toISOString(),
-      scannedBy: "WasteDNA Edge Vision",
+      scannedBy: "SwachhIITR Image Review",
       notes: auditNotes || (approved ? "Material classes verified for sorting line." : "Rejected during auditor inspection."),
       createdAt: new Date().toISOString(),
       isSimulated: true,
@@ -212,10 +212,10 @@ export default function ScannerPage() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-              WasteDNA Vision
+              SwachhIITR Image Review
             </h1>
             <span className="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
-              YOLOv8 Edge v2.4
+              Campus Review Pipeline
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">
@@ -366,7 +366,7 @@ export default function ScannerPage() {
           {/* Bottom helper instructions */}
           <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
             <span>Hover bounding boxes to inspect class specifications</span>
-            <span>OS Model: Edge-YOLO-Tiny</span>
+            <span>Review Model: Campus Materials</span>
           </div>
         </div>
 

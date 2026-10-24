@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { Pool } from "pg";
 
 const connectionString = process.env.DATABASE_URL;
@@ -13,12 +13,16 @@ const pool = new Pool({
 });
 
 try {
-  const migration = await readFile(
-    new URL("../db/migrations/001_initial_schema.sql", import.meta.url),
-    "utf8"
-  );
-  await pool.query(migration);
-  console.log("Database migration completed");
+  const migrationDirectory = new URL("../db/migrations/", import.meta.url);
+  const migrationFiles = (await readdir(migrationDirectory))
+    .filter((file) => file.endsWith(".sql"))
+    .sort();
+
+  for (const file of migrationFiles) {
+    await pool.query(await readFile(new URL(file, migrationDirectory), "utf8"));
+    console.log(`Applied ${file}`);
+  }
+  console.log("Database migrations completed");
 } finally {
   await pool.end();
 }

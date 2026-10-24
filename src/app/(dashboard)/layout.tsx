@@ -34,7 +34,7 @@ export default function DashboardLayout({
   useEffect(() => {
     if (ready) {
       hydrate().catch((error) => {
-        console.error("Failed to load WasteOS data", error);
+        console.error("Failed to load SwachhIITR data", error);
       });
     }
   }, [hydrate, ready]);
@@ -44,7 +44,7 @@ export default function DashboardLayout({
       <div className="min-h-[100dvh] flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
-          <p className="text-sm text-muted-foreground font-mono">Loading WasteOS...</p>
+          <p className="text-sm text-muted-foreground font-mono">Loading SwachhIITR...</p>
         </div>
       </div>
     );
