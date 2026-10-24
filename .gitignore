@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Vercel
+.vercel/
+
+# Local environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+
+# TypeScript build output
+*.tsbuildinfo
+
+# Python generated files
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+*.py[cod]
+
+# macOS
+.DS_Store
