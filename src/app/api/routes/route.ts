@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 import { query } from "@/lib/server/db";
 
 export async function GET() {
+  await connection();
   const result = await query(
     `SELECT r.id, r.name, r.vehicle_id, r.status, r.total_distance_km,
             r.estimated_duration_minutes, r.started_at, r.completed_at, r.created_at,
