@@ -30,17 +30,20 @@ export async function POST(request: Request) {
       contentType: file.type,
     });
 
-    return NextResponse.json({
-      success: true,
-      asset: {
-        url: uploaded.secure_url,
-        publicId: uploaded.public_id,
-        width: uploaded.width,
-        height: uploaded.height,
-        bytes: uploaded.bytes,
-        format: uploaded.format,
+    return NextResponse.json(
+      {
+        success: true,
+        asset: {
+          url: uploaded.secure_url,
+          publicId: uploaded.public_id,
+          width: uploaded.width,
+          height: uploaded.height,
+          bytes: uploaded.bytes,
+          format: uploaded.format,
+        },
       },
-    });
+      { headers: { "Cache-Control": "no-store" } }
+    );
   } catch (error) {
     console.error("Cloudinary upload failed", error);
     const message =
@@ -51,7 +54,10 @@ export async function POST(request: Request) {
           : "Image upload failed";
     return NextResponse.json(
       { error: message },
-      { status: message.startsWith("Image storage is not configured") ? 503 : 502 }
+      {
+        status: message.startsWith("Image storage is not configured") ? 503 : 502,
+        headers: { "Cache-Control": "no-store" },
+      }
     );
   }
 }

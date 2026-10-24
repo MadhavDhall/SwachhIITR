@@ -117,6 +117,7 @@ export default function ScannerPage() {
   };
 
   const handleSelectSample = (sample: typeof DEMO_SAMPLES[0]) => {
+    setUploadError(null);
     setActiveImage(sample.url);
     setIsProcessing(true);
     setVerificationDone(null);
@@ -166,7 +167,7 @@ export default function ScannerPage() {
       } catch (error) {
         setUploadError(
           error instanceof Error
-            ? `${error.message}. Showing demo inference instead.`
+            ? `Image saved, but campus review was unavailable: ${error.message}. Showing local review instead.`
             : "Inference service unavailable. Showing demo inference instead."
         );
       }
