@@ -48,7 +48,7 @@ export default function LedgerPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `swachhiitr-ledger-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `wasteos-ledger-export-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
   };
 
@@ -62,7 +62,7 @@ export default function LedgerPage() {
               Circular Waste Ledger
             </h1>
             <span className="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
-              Verified Campus Record
+              Immutable Traceability
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">

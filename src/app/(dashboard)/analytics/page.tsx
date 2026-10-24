@@ -29,13 +29,13 @@ import { useWasteStore } from "@/lib/store/waste-store";
 
 // 7-day Fill Trends Data
 const FILL_TRENDS_DATA = [
-  { day: "Mon", academicArea: 62, hostels: 54 },
-  { day: "Tue", academicArea: 68, hostels: 61 },
-  { day: "Wed", academicArea: 75, hostels: 69 },
-  { day: "Thu", academicArea: 71, hostels: 64 },
-  { day: "Fri", academicArea: 84, hostels: 78 },
-  { day: "Sat", academicArea: 91, hostels: 86 },
-  { day: "Sun", academicArea: 79, hostels: 72 },
+  { day: "Mon", southMumbai: 62, westernSuburbs: 54, easternSuburbs: 48 },
+  { day: "Tue", southMumbai: 68, westernSuburbs: 61, easternSuburbs: 52 },
+  { day: "Wed", southMumbai: 75, westernSuburbs: 69, easternSuburbs: 58 },
+  { day: "Thu", southMumbai: 71, westernSuburbs: 64, easternSuburbs: 55 },
+  { day: "Fri", southMumbai: 84, westernSuburbs: 78, easternSuburbs: 67 },
+  { day: "Sat", southMumbai: 91, westernSuburbs: 86, easternSuburbs: 74 },
+  { day: "Sun", southMumbai: 79, westernSuburbs: 72, easternSuburbs: 63 },
 ];
 
 // Material Composition Breakdown
@@ -112,7 +112,7 @@ export default function AnalyticsPage() {
 
         <div className="p-4 rounded-xl bg-slate-900/60 border border-white/[0.08]">
           <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>CO2 Avoided via smarter collection</span>
+            <span>CO2 Avoided via OR-Tools</span>
             <TrendUp size={18} className="text-teal-400" />
           </div>
           <div className="mt-2 text-3xl font-bold text-teal-400 font-mono">4.82 tCO2e</div>
@@ -175,8 +175,8 @@ export default function AnalyticsPage() {
                 <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
                 <Area
                   type="monotone"
-                  dataKey="academicArea"
-                  name="Academic Area"
+                  dataKey="southMumbai"
+                  name="South Mumbai"
                   stroke="#10b981"
                   strokeWidth={2}
                   fillOpacity={1}
@@ -184,8 +184,8 @@ export default function AnalyticsPage() {
                 />
                 <Area
                   type="monotone"
-                  dataKey="hostels"
-                  name="Hostels"
+                  dataKey="westernSuburbs"
+                  name="Western Suburbs"
                   stroke="#3b82f6"
                   strokeWidth={2}
                   fillOpacity={1}
@@ -200,10 +200,10 @@ export default function AnalyticsPage() {
         <div className="lg:col-span-5 rounded-xl bg-slate-900/40 border border-white/[0.08] p-5 flex flex-col">
           <div className="mb-2">
             <h2 className="text-base font-semibold text-white tracking-tight">
-              Campus Waste Composition
+              WasteDNA Stream Composition
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Material percentages from reviewed campus waste scans
+              Material percentages classified by YOLOv8 vision pipeline
             </p>
           </div>
 

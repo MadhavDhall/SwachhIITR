@@ -7,9 +7,9 @@ import { useAuthStore, initAuthFromStorage } from "@/lib/auth/store";
 import { cn } from "@/lib/utils";
 
 const DEMO_ACCOUNTS = [
-  { email: "admin@swachhiitr.in", role: "Admin", name: "SwachhIITR Administrator" },
-  { email: "operator@swachhiitr.in", role: "Operator", name: "Campus Operations" },
-  { email: "driver@swachhiitr.in", role: "Driver", name: "Campus Collection Team" },
+  { email: "priya.sharma@wasteos.demo", role: "Admin", name: "Priya Sharma" },
+  { email: "marco.reyes@wasteos.demo", role: "Operator", name: "Marco Reyes" },
+  { email: "aisha.patel@wasteos.demo", role: "Driver", name: "Aisha Patel" },
 ];
 
 export default function LoginPage() {
@@ -85,7 +85,7 @@ export default function LoginPage() {
               <Recycle size={22} weight="bold" className="text-white" />
             </div>
             <span className="text-xl font-semibold text-white tracking-tight">
-              SwachhIITR
+              WasteOS
             </span>
           </div>
 
@@ -101,9 +101,9 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center gap-6 text-sm text-white/30">
-            <span>Waste Image Review</span>
+            <span>WasteDNA Detection</span>
             <span className="w-1 h-1 rounded-full bg-white/20" />
-            <span>Campus Bin Monitoring</span>
+            <span>BinSync Monitoring</span>
             <span className="w-1 h-1 rounded-full bg-white/20" />
             <span>Route Optimization</span>
           </div>
@@ -119,7 +119,7 @@ export default function LoginPage() {
               <Recycle size={20} weight="bold" className="text-white" />
             </div>
             <span className="text-lg font-semibold text-foreground tracking-tight">
-              SwachhIITR
+              WasteOS
             </span>
           </div>
 
@@ -145,7 +145,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@swachhiitr.in"
+                placeholder="you@wasteos.demo"
                 className="w-full h-11 px-3.5 rounded-lg bg-secondary/50 border border-border text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 transition-all"
                 autoComplete="email"
               />

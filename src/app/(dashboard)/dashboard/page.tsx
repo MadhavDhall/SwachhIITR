@@ -67,7 +67,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white text-xs font-semibold tracking-wide transition-all shadow-lg shadow-emerald-950/40"
           >
             <Camera size={16} weight="bold" />
-            <span>Review Waste Images</span>
+            <span>Launch WasteDNA</span>
           </Link>
           <Link
             href="/routes"
@@ -121,7 +121,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* KPI 3: reviewed waste images */}
+        {/* KPI 3: WasteDNA Detection */}
         <div className="p-4 rounded-xl bg-slate-900/60 border border-white/[0.08] backdrop-blur-sm relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">AI Inferred Scans</span>
@@ -137,7 +137,7 @@ export default function DashboardPage() {
           </div>
           <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-white/[0.04] pt-2">
             <span>Verified: {scans.filter(s => s.verificationStatus === "verified").length}</span>
-            <span className="text-slate-400 font-mono">Campus material review</span>
+            <span className="text-slate-400 font-mono">YOLOv8 Edge model</span>
           </div>
         </div>
 
@@ -157,7 +157,7 @@ export default function DashboardPage() {
           </div>
           <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-white/[0.04] pt-2">
             <span>Active Routes: {activeRoutes.length}</span>
-            <span className="font-mono text-blue-400">Collection planning</span>
+            <span className="font-mono text-blue-400">OR-Tools VRP</span>
           </div>
         </div>
       </div>
@@ -325,13 +325,13 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Bottom Section: recent waste image reviews */}
+      {/* Bottom Section: WasteDNA AI Recent Scans Preview */}
       <div className="rounded-xl bg-slate-900/40 border border-white/[0.08] p-5">
         <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
           <div>
             <h2 className="text-base font-semibold text-white tracking-tight flex items-center gap-2">
               <Sparkle size={18} className="text-emerald-400" />
-              <span>Recent Waste Image Reviews</span>
+              <span>WasteDNA Recent Inferences</span>
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
               Multi-object bounding boxes, class counts, and automated material recommendations

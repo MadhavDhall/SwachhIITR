@@ -1,5 +1,5 @@
 /* ────────────────────────────────────────────────────────────
- * SwachhIITR — Local fallback data
+ * WasteOS — Demo Seed Data
  * All data is clearly labeled as simulated / demo.
  * ──────────────────────────────────────────────────────────── */
 
@@ -22,31 +22,31 @@ import type {
 export const DEMO_USERS: User[] = [
   {
     id: "usr_001",
-    email: "admin@swachhiitr.in",
-    name: "SwachhIITR Administrator",
+    email: "priya.sharma@wasteos.demo",
+    name: "Priya Sharma",
     role: "admin",
     avatarUrl: "https://picsum.photos/seed/priya-admin/80/80",
     createdAt: "2024-01-15T08:00:00Z",
   },
   {
     id: "usr_002",
-    email: "operator@swachhiitr.in",
-    name: "Campus Operations",
+    email: "marco.reyes@wasteos.demo",
+    name: "Marco Reyes",
     role: "operator",
     avatarUrl: "https://picsum.photos/seed/marco-ops/80/80",
     createdAt: "2024-02-10T09:30:00Z",
   },
   {
     id: "usr_003",
-    email: "driver@swachhiitr.in",
-    name: "Campus Collection Team",
+    email: "aisha.patel@wasteos.demo",
+    name: "Aisha Patel",
     role: "driver",
     avatarUrl: "https://picsum.photos/seed/aisha-driver/80/80",
     createdAt: "2024-03-05T07:00:00Z",
   },
   {
     id: "usr_004",
-    email: "driver2@swachhiitr.in",
+    email: "tobias.mueller@wasteos.demo",
     name: "Tobias Mueller",
     role: "driver",
     avatarUrl: "https://picsum.photos/seed/tobias-driver/80/80",
@@ -154,7 +154,7 @@ export const WASTE_CATEGORIES: WasteCategory[] = [
   },
 ];
 
-// ── Legacy local fallback bins ─────────────────────────────
+// ── Bins (Mumbai, India - realistic coordinates) ───────────
 export const DEMO_BINS: Bin[] = [
   {
     id: "bin_001",

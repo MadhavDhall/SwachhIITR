@@ -23,8 +23,8 @@ import { useAuthStore } from "@/lib/auth/store";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Command Center", icon: HouseLine },
-  { href: "/scanner", label: "Waste Review", icon: Camera },
-  { href: "/bins", label: "Campus Bins", icon: MapPin },
+  { href: "/scanner", label: "WasteDNA", icon: Camera },
+  { href: "/bins", label: "BinSync", icon: MapPin },
   { href: "/routes", label: "Route Planner", icon: Path },
   { href: "/ledger", label: "Waste Ledger", icon: BookOpen },
   { href: "/analytics", label: "Analytics", icon: ChartBar },
@@ -71,7 +71,7 @@ export function Sidebar() {
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full flex flex-col",
-          "bg-[#10261b]/95 border-r border-emerald-200/10 shadow-[8px_0_30px_rgba(3,20,10,0.18)]",
+          "bg-slate-950 border-r border-white/[0.06]",
           "transition-all duration-300 ease-out",
           collapsed ? "w-[68px]" : "w-[240px]",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
@@ -79,13 +79,13 @@ export function Sidebar() {
       >
         {/* Logo area */}
         <div className="flex items-center gap-3 px-4 h-16 border-b border-white/[0.06] flex-shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-lime-400 to-emerald-700 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-950/40">
+          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center flex-shrink-0">
             <Recycle size={18} weight="bold" className="text-white" />
           </div>
           {!collapsed && (
             <div className="flex flex-col min-w-0">
               <span className="text-sm font-semibold text-white tracking-tight">
-                SwachhIITR
+                WasteOS
               </span>
               <span className="text-[10px] text-emerald-500/80 font-mono tracking-wide uppercase">
                 Operations

@@ -51,7 +51,7 @@ export default function RoutesPage() {
               Route Planner & Fleet Optimizer
             </h1>
             <span className="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
-              Campus Collection Planner
+              OR-Tools VRP Solver
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">
@@ -68,7 +68,7 @@ export default function RoutesPage() {
           {isOptimizing ? (
             <>
               <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-              <span>Planning collection route...</span>
+              <span>Solving VRP Graph...</span>
             </>
           ) : (
             <>

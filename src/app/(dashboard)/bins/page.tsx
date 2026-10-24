@@ -83,7 +83,7 @@ export default function BinsPage() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-              IIT Roorkee Campus Bins
+              BinSync Geospatial Fleet
             </h1>
             <span className="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
               {bins.length} Smart Bins

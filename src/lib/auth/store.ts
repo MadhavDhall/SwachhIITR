@@ -37,7 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ isLoading: false });
       return {
         success: false,
-        error: "No account found with that email. Try: admin@swachhiitr.in",
+        error: "No account found with that email. Try: priya.sharma@wasteos.demo",
       };
     }
 
@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     
     // Persist to sessionStorage for page refreshes
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("swachhiitr_user", JSON.stringify(found));
+      sessionStorage.setItem("wasteos_user", JSON.stringify(found));
     }
 
     return { success: true };
@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     set({ user: null, isAuthenticated: false });
     if (typeof window !== "undefined") {
-      sessionStorage.removeItem("swachhiitr_user");
+      sessionStorage.removeItem("wasteos_user");
     }
   },
 
@@ -76,7 +76,7 @@ export function hasAccess(userRole: UserRole | undefined, requiredRoles: UserRol
  */
 export function initAuthFromStorage(): User | null {
   if (typeof window === "undefined") return null;
-  const stored = sessionStorage.getItem("swachhiitr_user");
+  const stored = sessionStorage.getItem("wasteos_user");
   if (!stored) return null;
   try {
     return JSON.parse(stored) as User;

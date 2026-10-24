@@ -14,13 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SwachhIITR - Sustainable Campus Operations",
+  title: "WasteOS - Intelligent Waste Management",
   description:
-    "Sustainable waste and cleanliness operations for IIT Roorkee.",
-  icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-  },
+    "Unified waste management platform combining AI waste detection and predictive waste collection with route optimization.",
 };
 
 export default function RootLayout({

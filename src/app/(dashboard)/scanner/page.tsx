@@ -22,7 +22,7 @@ import { WASTE_CATEGORIES } from "@/data/seed";
 import type { Detection, WasteScan } from "@/types";
 import { cn } from "@/lib/utils";
 
-// Preset images for local review testing
+// Preset demo images to test WasteDNA quickly
 const DEMO_SAMPLES = [
   {
     id: "sample-1",
@@ -117,7 +117,6 @@ export default function ScannerPage() {
   };
 
   const handleSelectSample = (sample: typeof DEMO_SAMPLES[0]) => {
-    setUploadError(null);
     setActiveImage(sample.url);
     setIsProcessing(true);
     setVerificationDone(null);
@@ -167,7 +166,7 @@ export default function ScannerPage() {
       } catch (error) {
         setUploadError(
           error instanceof Error
-            ? `Image saved, but campus review was unavailable: ${error.message}. Showing local review instead.`
+            ? `${error.message}. Showing demo inference instead.`
             : "Inference service unavailable. Showing demo inference instead."
         );
       }
@@ -196,7 +195,7 @@ export default function ScannerPage() {
       verificationStatus: approved ? "verified" : "rejected",
       verifiedBy: "Operations Supervisor",
       verifiedAt: new Date().toISOString(),
-      scannedBy: "SwachhIITR Image Review",
+      scannedBy: "WasteDNA Edge Vision",
       notes: auditNotes || (approved ? "Material classes verified for sorting line." : "Rejected during auditor inspection."),
       createdAt: new Date().toISOString(),
       isSimulated: true,
@@ -213,10 +212,10 @@ export default function ScannerPage() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-              SwachhIITR Image Review
+              WasteDNA Vision
             </h1>
             <span className="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
-              Campus Review Pipeline
+              YOLOv8 Edge v2.4
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">
@@ -367,7 +366,7 @@ export default function ScannerPage() {
           {/* Bottom helper instructions */}
           <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
             <span>Hover bounding boxes to inspect class specifications</span>
-            <span>Review Model: Campus Materials</span>
+            <span>OS Model: Edge-YOLO-Tiny</span>
           </div>
         </div>
 
