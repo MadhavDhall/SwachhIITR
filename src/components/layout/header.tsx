@@ -30,7 +30,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 lg:px-6 bg-slate-950/80 backdrop-blur-md border-b border-white/[0.06] -mx-4 lg:-mx-6 -mt-4 lg:-mt-6 mb-6">
+    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 lg:px-6 bg-[#0b1f16]/85 backdrop-blur-md border-b border-emerald-200/10 -mx-4 lg:-mx-6 -mt-4 lg:-mt-6 mb-6">
       {/* Left: Environment Indicator */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/20 text-emerald-400 text-xs font-mono">

@@ -51,7 +51,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-[100dvh] flex bg-slate-950 text-slate-100">
+    <div className="min-h-[100dvh] flex bg-[#0b1f16] text-slate-100">
       <Sidebar />
       <main className="flex-1 lg:ml-[240px] transition-all duration-300">
         <div className="p-4 lg:p-6 max-w-[1600px] min-h-[100dvh] flex flex-col">

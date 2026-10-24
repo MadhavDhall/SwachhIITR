@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "SwachhIITR - Sustainable Campus Operations",
   description:
     "Sustainable waste and cleanliness operations for IIT Roorkee.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

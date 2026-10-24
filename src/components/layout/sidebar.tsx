@@ -71,7 +71,7 @@ export function Sidebar() {
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full flex flex-col",
-          "bg-slate-950 border-r border-white/[0.06]",
+          "bg-[#10261b]/95 border-r border-emerald-200/10 shadow-[8px_0_30px_rgba(3,20,10,0.18)]",
           "transition-all duration-300 ease-out",
           collapsed ? "w-[68px]" : "w-[240px]",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
@@ -79,7 +79,7 @@ export function Sidebar() {
       >
         {/* Logo area */}
         <div className="flex items-center gap-3 px-4 h-16 border-b border-white/[0.06] flex-shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-lime-400 to-emerald-700 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-950/40">
             <Recycle size={18} weight="bold" className="text-white" />
           </div>
           {!collapsed && (
