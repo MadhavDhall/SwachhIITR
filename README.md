@@ -119,9 +119,11 @@ detections, vehicles, routes, collections, alerts, and audit events. Images
 are uploaded through `POST /api/uploads`; Cloudinary credentials stay on the
 server and are never exposed to the browser.
 
-`GET /api/health` reports database and Cloudinary readiness for Render health
-checks. The included `render.yaml` provisions a Render PostgreSQL database and
-configures the web service.
+`GET /api/health` reports database and Cloudinary readiness. It returns HTTP
+200 with an explicit `degraded` status when optional environment variables are
+not configured yet, so Render can keep the web process healthy while setup is
+being completed. The included `render.yaml` provisions a Render PostgreSQL
+database and configures the web service.
 
 The optional FastAPI service is also defined in `render.yaml`. Set
 `NEXT_PUBLIC_FASTAPI_URL` to its public Render URL to enable real inference

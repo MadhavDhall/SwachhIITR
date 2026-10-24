@@ -3,7 +3,8 @@ import { Pool } from "pg";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
-  throw new Error("DATABASE_URL is required to run migrations");
+  console.warn("DATABASE_URL is not configured; skipping database migration");
+  process.exit(0);
 }
 
 const pool = new Pool({

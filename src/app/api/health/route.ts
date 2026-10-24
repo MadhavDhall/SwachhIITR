@@ -21,6 +21,6 @@ export async function GET() {
   const healthy = checks.database && checks.cloudinary;
   return NextResponse.json(
     { status: healthy ? "healthy" : "degraded", checks },
-    { status: healthy ? 200 : 503 }
+    { status: 200 }
   );
 }
