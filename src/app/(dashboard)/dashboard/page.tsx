@@ -241,7 +241,7 @@ export default function DashboardPage() {
                       onClick={() => handleQuickPing(bin.id)}
                       disabled={simulating}
                       className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 text-xs font-mono transition-all active:scale-95 flex items-center gap-1.5"
-                      title="Trigger instantaneous sensor ping via simulated MQTT"
+                      title="Save a sensor ping to Render PostgreSQL"
                     >
                       <Lightning size={13} className="text-amber-400" />
                       <span>Ping</span>
@@ -260,7 +260,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Right 1 Col: Live IoT Telemetry & Sensor Simulator */}
+        {/* Right 1 Col: Sensor telemetry */}
         <div className="rounded-xl bg-slate-900/40 border border-white/[0.08] p-5 flex flex-col">
           <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
             <div>
@@ -269,7 +269,7 @@ export default function DashboardPage() {
                 <span>ESP32 Sensor Telemetry</span>
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Live simulated MQTT stream over AWS IoT Core topic <code className="text-emerald-400 font-mono">wasteos/sensors/+/data</code>
+                Latest readings stored in Render PostgreSQL
               </p>
             </div>
           </div>
@@ -281,12 +281,12 @@ export default function DashboardPage() {
               <span className="font-mono text-slate-200">ESP32 + HC-SR04</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-400">MQTT Broker:</span>
-              <span className="font-mono text-emerald-400">iot.eu-west-1.amazonaws.com</span>
+              <span className="text-slate-400">Data storage:</span>
+              <span className="font-mono text-emerald-400">Render PostgreSQL</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-400">Sampling Rate:</span>
-              <span className="font-mono text-slate-200">Every 15 mins (Simulated)</span>
+              <span className="font-mono text-slate-200">Manual ping</span>
             </div>
           </div>
 

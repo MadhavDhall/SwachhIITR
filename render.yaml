@@ -40,26 +40,6 @@ services:
         fromDatabase:
           name: wasteos-db
           property: connectionString
-      - key: MQTT_BROKER
-        sync: false
-      - key: MQTT_PORT
-        value: "8883"
-      - key: MQTT_TOPIC
-        value: wasteos/sensors/+/data
-      - key: MQTT_TLS
-        value: "true"
-      - key: MQTT_USERNAME
-        sync: false
-      - key: MQTT_PASSWORD
-        sync: false
-      - key: MQTT_CA_CERT
-        sync: false
-      - key: MQTT_CLIENT_CERT
-        sync: false
-      - key: MQTT_CLIENT_KEY
-        sync: false
-      - key: INGESTION_API_KEY
-        sync: false
 
 databases:
   - name: wasteos-db

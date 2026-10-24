@@ -11,15 +11,7 @@ import type {
   ThresholdConfig,
   DashboardStats,
 } from "@/types";
-import {
-  DEMO_BINS,
-  DEMO_WASTE_SCANS as DEMO_SCANS,
-  DEMO_ROUTES,
-  DEMO_ALERTS,
-  DEMO_VEHICLES,
-  DEFAULT_THRESHOLDS,
-  DEMO_DASHBOARD_STATS,
-} from "@/data/seed";
+import { DEFAULT_THRESHOLDS } from "@/data/seed";
 
 interface WasteOSState {
   bins: Bin[];
@@ -33,6 +25,7 @@ interface WasteOSState {
   isSimulatingSensors: boolean;
 
   // Actions
+  hydrate: () => Promise<void>;
   selectBin: (id: string | null) => void;
   updateBinFill: (binId: string, fillPct: number) => void;
   addSensorReading: (binId: string, distanceCm: number, fillPct: number) => void;
@@ -47,15 +40,64 @@ interface WasteOSState {
 }
 
 export const useWasteStore = create<WasteOSState>((set, get) => ({
-  bins: DEMO_BINS,
-  scans: DEMO_SCANS,
-  routes: DEMO_ROUTES,
-  alerts: DEMO_ALERTS,
-  vehicles: DEMO_VEHICLES,
+  bins: [],
+  scans: [],
+  routes: [],
+  alerts: [],
+  vehicles: [],
   thresholds: DEFAULT_THRESHOLDS,
-  stats: DEMO_DASHBOARD_STATS,
+  stats: {
+    totalBins: 0,
+    activeBins: 0,
+    urgentBins: 0,
+    totalScans: 0,
+    totalCollections: 0,
+    activeVehicles: 0,
+    totalVehicles: 0,
+    activeAlerts: 0,
+    avgFillLevel: 0,
+    collectionEfficiency: null,
+  },
   selectedBinId: null,
   isSimulatingSensors: false,
+
+  hydrate: async () => {
+    const responses = await Promise.all([
+      fetch("/api/bins"),
+      fetch("/api/scans"),
+      fetch("/api/routes"),
+      fetch("/api/alerts"),
+    ]);
+    if (responses.some((response) => !response.ok)) {
+      throw new Error("Failed to load operational data");
+    }
+    const [bins, scans, routes, alerts] = await Promise.all(
+      responses.map((response) => response.json())
+    );
+    const nextBins = bins.bins ?? [];
+    const nextAlerts = alerts.alerts ?? [];
+    set({
+      bins: nextBins,
+      scans: scans.scans ?? [],
+      routes: routes.routes ?? [],
+      alerts: nextAlerts,
+      stats: {
+        totalBins: nextBins.length,
+        activeBins: nextBins.filter((bin: Bin) => bin.status === "active").length,
+        urgentBins: nextBins.filter((bin: Bin) => (bin.currentFillPct ?? 0) >= 85).length,
+        totalScans: scans.total ?? 0,
+        totalCollections: 0,
+        activeVehicles: 0,
+        totalVehicles: 0,
+        activeAlerts: nextAlerts.filter((alert: Alert) => !alert.acknowledged).length,
+        avgFillLevel: nextBins.length
+          ? nextBins.reduce((sum: number, bin: Bin) => sum + (bin.currentFillPct ?? 0), 0) /
+            nextBins.length
+          : 0,
+        collectionEfficiency: null,
+      },
+    });
+  },
 
   selectBin: (id) => set({ selectedBinId: id }),
 
@@ -298,7 +340,22 @@ export const useWasteStore = create<WasteOSState>((set, get) => ({
       // Add a realistic 2-5% fill drift
       const delta = Math.floor(Math.random() * 6) - 1;
       const nextFill = Math.min(100, Math.max(5, current + delta));
-      updateBinFill(target.id, nextFill);
+      void fetch("/api/sensor-readings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          binId: target.id,
+          distanceCm: Math.max(0, target.capacityLiters * (1 - nextFill / 100) / 10),
+          fillPct: nextFill,
+        }),
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to save ping");
+        }
+        updateBinFill(target.id, nextFill);
+      }).catch((error) => {
+        console.error("Ping failed", error);
+      });
     }
   },
 }));

@@ -5,18 +5,15 @@ import {
   GearSix,
   CheckCircle,
   FloppyDisk,
-  Broadcast,
   Database,
   CloudArrowUp,
   Cpu,
   ShieldCheck,
-  Lightning,
-  Sparkle,
 } from "@phosphor-icons/react";
 import { useWasteStore } from "@/lib/store/waste-store";
 
 export default function SettingsPage() {
-  const { thresholds, updateThresholds, isSimulatingSensors, toggleSensorSimulation } = useWasteStore();
+  const { thresholds, updateThresholds } = useWasteStore();
 
   const [formState, setFormState] = useState(thresholds);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -105,7 +102,7 @@ export default function SettingsPage() {
                 onChange={(e) => setFormState({ ...formState, sensorOfflineMinutes: Number(e.target.value) })}
                 className="w-full h-10 px-3 rounded-lg bg-slate-950/70 border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-emerald-500/50"
               />
-              <span className="text-[10px] text-slate-500 block">Flag device offline if no MQTT heartbeat received</span>
+              <span className="text-[10px] text-slate-500 block">Flag device offline if no ping is received</span>
             </div>
 
             <div className="space-y-1.5">
@@ -126,7 +123,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* AWS & Cloud Architecture Section */}
+        {/* Render architecture section */}
         <div className="rounded-xl bg-slate-900/60 border border-white/[0.08] p-5 space-y-4">
           <div className="flex items-center gap-2 pb-3 border-b border-white/[0.06]">
             <CloudArrowUp size={18} className="text-blue-400" />
@@ -134,22 +131,6 @@ export default function SettingsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-            {/* MQTT / IoT */}
-            <div className="p-3.5 rounded-lg bg-slate-950/60 border border-white/5 space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-white flex items-center gap-1.5">
-                  <Broadcast size={15} className="text-emerald-400" />
-                  IoT MQTT (planned)
-                </span>
-                <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">
-                  NOT CONFIGURED
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400">Use HiveMQ Cloud, EMQX, or AWS IoT Core later</p>
-              <p className="text-[11px] text-slate-500">Current sensor data: local simulation only</p>
-            </div>
-
-            {/* Amazon DynamoDB */}
             <div className="p-3.5 rounded-lg bg-slate-950/60 border border-white/5 space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-white flex items-center gap-1.5">
@@ -176,7 +157,7 @@ export default function SettingsPage() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">URL: {process.env.NEXT_PUBLIC_FASTAPI_URL || "Not configured"}</p>
-              <p className="text-[11px] text-slate-500">Engines: Ultralytics YOLOv8 + Google OR-Tools VRP (fallback enabled)</p>
+              <p className="text-[11px] text-slate-500">Engines: Ultralytics YOLOv8 + Google OR-Tools VRP</p>
             </div>
 
             {/* Cloudinary Storage */}
@@ -194,31 +175,6 @@ export default function SettingsPage() {
               <p className="text-[11px] text-slate-500">Uploads handled server-side via /api/uploads</p>
             </div>
           </div>
-        </div>
-
-        {/* Live Sensor Simulator Controller */}
-        <div className="rounded-xl bg-slate-900/60 border border-white/[0.08] p-5 flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <Lightning size={16} className="text-amber-400" />
-              <span>Background IoT Sensor Ping Generator</span>
-            </h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Periodically emit realistic ultrasonic distance drift to simulate live city bin fill trends.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={toggleSensorSimulation}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold font-mono transition-all ${
-              isSimulatingSensors
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-900/30"
-                : "bg-slate-800 text-slate-300 border border-white/10 hover:text-white"
-            }`}
-          >
-            {isSimulatingSensors ? "SIMULATOR ACTIVE [ON]" : "SIMULATOR PAUSED [OFF]"}
-          </button>
         </div>
 
         {/* Submit */}

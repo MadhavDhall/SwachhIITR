@@ -1,23 +1,32 @@
 import { NextResponse } from "next/server";
-import { DEMO_BINS, DEMO_VEHICLES } from "@/data/seed";
+import { query } from "@/lib/server/db";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
-    const minThreshold = body.min_fill_threshold ?? 70;
-
-    // Filter candidate bins for collection
-    const candidateBins = DEMO_BINS.filter(
-      (b) => (b.currentFillPct ?? 0) >= minThreshold
+    const minThreshold = Number(body.min_fill_threshold ?? 70);
+    const result = await query(
+      `SELECT id, label, address, latitude, longitude, current_fill_pct
+       FROM bins WHERE COALESCE(current_fill_pct, 0) >= $1
+       ORDER BY current_fill_pct DESC`,
+      [minThreshold]
     );
+    const candidateBins = result.rows;
+    const vehicleResult = await query(
+      `SELECT id, name, driver_id FROM vehicles
+       WHERE status = 'available' ORDER BY created_at LIMIT 1`
+    );
+    const vehicle = vehicleResult.rows[0];
+    if (!vehicle) {
+      return NextResponse.json({ error: "No available vehicle found" }, { status: 409 });
+    }
 
     const generatedRoutes = [
       {
         id: `rt_${Date.now()}_alpha`,
         name: "Optimized Route Alpha - South Cluster",
-        vehicleId: DEMO_VEHICLES[0].id,
-        vehicleName: DEMO_VEHICLES[0].name,
-        driverName: DEMO_VEHICLES[0].driverName,
+        vehicleId: vehicle.id,
+        vehicleName: vehicle.name,
         totalDistanceKm: 16.4,
         estimatedDurationMinutes: 48,
         status: "planned",
@@ -26,8 +35,8 @@ export async function POST(request: Request) {
           binId: b.id,
           binLabel: b.label,
           address: b.address,
-          location: b.location,
-          fillPct: b.currentFillPct,
+          location: { lat: Number(b.latitude), lng: Number(b.longitude) },
+          fillPct: Number(b.current_fill_pct),
           estimatedArrival: new Date(Date.now() + (i + 1) * 20 * 60000).toISOString(),
           collected: false,
         })),

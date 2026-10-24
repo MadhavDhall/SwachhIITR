@@ -49,8 +49,8 @@
 
 ### 7. System Architecture & Settings (`/settings`)
 - Configurable operational alert thresholds (warning fill, critical overflow, offline timeout).
-- AWS IoT Core, DynamoDB, S3, and FastAPI connector status monitoring.
-- Background sensor simulation engine toggle.
+- Render PostgreSQL, Cloudinary, and FastAPI connector status monitoring.
+- Manual sensor ping controls that persist readings to PostgreSQL.
 
 ---
 
@@ -137,16 +137,12 @@ For real WasteDNA predictions, place the trained weights at
 `YOLO_MODEL_PATH` to a mounted model path in Render. The model file is ignored
 by Git because trained weights are usually too large for the repository.
 
-### MQTT telemetry
+### Sensor readings
 
-The FastAPI service subscribes to `MQTT_TOPIC` when `MQTT_BROKER` is set and
-persists each JSON message into `sensor_readings`, updating the related bin.
-HiveMQ Cloud and EMQX Cloud work with username/password credentials. AWS IoT
-Core works with `MQTT_TLS=true` and certificate values; certificate values may
-be supplied as PEM contents in the environment variables and are materialized
-only in the service's temporary filesystem.
-
-Expected sensor payload:
+The dashboard's Ping action writes a sensor reading to PostgreSQL and updates
+the selected bin's fill level. This keeps the demo operational without an
+external broker. The manual FastAPI telemetry endpoint remains available for
+future device integrations.
 
 ```json
 {
@@ -165,7 +161,5 @@ Expected sensor payload:
 ## 📚 Technical Documentation
 
 Detailed engineering specifications are available in the [`docs/`](file:///c:/Drive-D/hackathon/wasteos/docs) directory:
-- [API Contracts](file:///c:/Drive-D/hackathon/wasteos/docs/API_CONTRACTS.md): Full REST & MQTT schemas
+- [API Contracts](file:///c:/Drive-D/hackathon/wasteos/docs/API_CONTRACTS.md): Full REST schemas
 - [Sensor Wiring](file:///c:/Drive-D/hackathon/wasteos/docs/SENSOR_WIRING.md): ESP32 + HC-SR04 pinout & deep-sleep battery budgeting
-- [AWS Deployment](file:///c:/Drive-D/hackathon/wasteos/docs/AWS_DEPLOYMENT.md): IoT Core, DynamoDB single-table design, and ECS architecture
-- [Cost & Security](file:///c:/Drive-D/hackathon/wasteos/docs/COST_SECURITY.md): AWS monthly calculator ($0.035/bin/mo) & security guardrails

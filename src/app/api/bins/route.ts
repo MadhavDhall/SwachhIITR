@@ -1,25 +1,63 @@
 import { NextResponse } from "next/server";
-import { DEMO_BINS } from "@/data/seed";
+import { query } from "@/lib/server/db";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const zone = searchParams.get("zone");
   const minFill = searchParams.get("min_fill");
 
-  let result = [...DEMO_BINS];
-
+  const values: unknown[] = [];
+  const filters: string[] = [];
   if (zone && zone !== "all") {
-    result = result.filter((b) => b.zone === zone);
+    values.push(zone);
+    filters.push(`b.zone = $${values.length}`);
+  }
+  if (minFill) {
+    const threshold = Number.parseFloat(minFill);
+    if (Number.isFinite(threshold)) {
+      values.push(threshold);
+      filters.push(`COALESCE(b.current_fill_pct, 0) >= $${values.length}`);
+    }
   }
 
-  if (minFill) {
-    const threshold = parseFloat(minFill);
-    result = result.filter((b) => (b.currentFillPct ?? 0) >= threshold);
-  }
+  const result = await query<{
+    id: string;
+    label: string;
+    address: string;
+    zone: string;
+    latitude: number;
+    longitude: number;
+    capacity_liters: number;
+    sensor_id: string | null;
+    status: string;
+    current_fill_pct: number | null;
+    last_reading_at: string | null;
+    predicted_overflow_at: string | null;
+    created_at: string;
+  }>(
+    `SELECT b.* FROM bins b ${filters.length ? `WHERE ${filters.join(" AND ")}` : ""}
+     ORDER BY b.created_at DESC`,
+    values
+  );
+
+  const bins = result.rows.map((b) => ({
+    id: b.id,
+    label: b.label,
+    location: { lat: Number(b.latitude), lng: Number(b.longitude) },
+    address: b.address,
+    zone: b.zone,
+    capacityLiters: b.capacity_liters,
+    sensorId: b.sensor_id,
+    status: b.status,
+    currentFillPct: b.current_fill_pct === null ? null : Number(b.current_fill_pct),
+    lastReadingAt: b.last_reading_at,
+    predictedOverflowAt: b.predicted_overflow_at,
+    createdAt: b.created_at,
+  }));
 
   return NextResponse.json({
-    bins: result,
-    total: result.length,
+    bins,
+    total: bins.length,
     timestamp: new Date().toISOString(),
   });
 }
@@ -27,23 +65,30 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const newBin = {
-      id: `bin_${Date.now()}`,
-      label: body.label || `BIN-${Date.now().toString().slice(-4)}`,
-      location: body.location || { lat: 19.076, lng: 72.8777 },
-      address: body.address || "Unspecified Location",
-      zone: body.zone || "Central Municipal",
-      capacityLiters: body.capacityLiters || 240,
-      sensorId: body.sensorId || `sns_${Date.now().toString().slice(-3)}`,
-      status: "active",
-      currentFillPct: 0,
-      lastReadingAt: new Date().toISOString(),
-      predictedOverflowAt: null,
-      createdAt: new Date().toISOString(),
-    };
+    if (!body.label || !body.address || !body.zone) {
+      return NextResponse.json({ error: "label, address, and zone are required" }, { status: 400 });
+    }
+    const id = `bin_${crypto.randomUUID()}`;
+    const result = await query(
+      `INSERT INTO bins
+        (id, label, address, zone, latitude, longitude, capacity_liters, sensor_id, current_fill_pct)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 0)
+       RETURNING *`,
+      [
+        id,
+        body.label,
+        body.address,
+        body.zone,
+        body.location?.lat,
+        body.location?.lng,
+        body.capacityLiters ?? 240,
+        body.sensorId ?? null,
+      ]
+    );
 
-    return NextResponse.json({ bin: newBin, success: true }, { status: 201 });
+    return NextResponse.json({ bin: result.rows[0], success: true }, { status: 201 });
   } catch (error) {
+    console.error("Failed to create bin", error);
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 }

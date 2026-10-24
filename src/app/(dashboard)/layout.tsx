@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore, initAuthFromStorage } from "@/lib/auth/store";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { useWasteStore } from "@/lib/store/waste-store";
 
 export default function DashboardLayout({
   children,
@@ -14,6 +15,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const { user, isAuthenticated, setUser } = useAuthStore();
   const [ready, setReady] = useState(false);
+  const hydrate = useWasteStore((state) => state.hydrate);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -28,6 +30,14 @@ export default function DashboardLayout({
       setReady(true);
     }
   }, [isAuthenticated, router, setUser]);
+
+  useEffect(() => {
+    if (ready) {
+      hydrate().catch((error) => {
+        console.error("Failed to load WasteOS data", error);
+      });
+    }
+  }, [hydrate, ready]);
 
   if (!ready) {
     return (
